@@ -68,7 +68,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/hailo0:/dev/hailo0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    ghcr.io/wrm119/r20-hailo8-yolov8:latest
+    ghcr.io/seeed-projects/r20-hailo8-yolov8:latest
 ```
 
 Docker will pull the image on first run (~1.8 GB). The container then loops the
@@ -90,7 +90,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    ghcr.io/wrm119/r20-hailo8-yolov8:latest \
+    ghcr.io/seeed-projects/r20-hailo8-yolov8:latest \
     python web_detection.py --model_path model/yolov8n.hef --camera_id 0
 ```
 
@@ -131,7 +131,7 @@ When you need to change the code, swap a different `.hef`, or rebuild against a
 different HailoRT version:
 
 ```bash
-git clone https://github.com/wrm119/reComputer-R20-CV.git
+git clone https://github.com/Seeed-Projects/reComputer-R20-CV.git
 cd reComputer-R20-CV/src/rpi5_hailo8_yolov8
 
 # Replace assets if needed (already bundled — only swap to customize)
