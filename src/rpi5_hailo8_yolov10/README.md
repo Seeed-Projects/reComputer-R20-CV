@@ -1,9 +1,9 @@
-# YOLOv11 on Raspberry Pi 5 + Hailo-8
+# YOLOv10 on Raspberry Pi 5 + Hailo-8
 
-This is the YOLOv11 object detection module for **Raspberry Pi 5 + Hailo-8**
+This is the YOLOv10 object detection module for **Raspberry Pi 5 + Hailo-8**
 (reComputer R20 series). It's designed as a **template**: copy this directory and
-swap the `.hef` to adapt to other Hailo Model Zoo models (yolov11n/s/m, yolov8,
-yolov5, yolov11-seg, etc.).
+swap the `.hef` to adapt to other Hailo Model Zoo models (yolov10n/s/m, yolov8,
+yolov5, yolov10-seg, etc.).
 
 Features: real-time Web preview (MJPEG with detection overlay), REST API
 compatible with Ultralytics Cloud API conventions, and offline batch video
@@ -42,7 +42,7 @@ sudo systemctl start docker
 ```
 
 `hailortcli fw-control identify` should print board info and a firmware version.
-Remember the firmware version â€” your container's `hailort` wheel **must match it**.
+Remember the firmware version â€?your container's `hailort` wheel **must match it**.
 
 ---
 
@@ -50,17 +50,17 @@ Remember the firmware version â€” your container's `hailort` wheel **must match 
 
 ### 2.1 Download the model
 
-Grab a pre-compiled `yolov11n.hef` from the
+Grab a pre-compiled `yolov10n.hef` from the
 [Hailo Model Zoo](https://github.com/hailo-ai/hailo_model_zoo) and drop it into
 `model/`:
 
 ```bash
-cd src/rpi5_hailo8_yolov11/model
-# Example path â€” check the Model Zoo for the version matching your HailoRT
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/<version>/hailo8/yolov11n.hef
+cd src/rpi5_hailo8_yolov10/model
+# Example path â€?check the Model Zoo for the version matching your HailoRT
+wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/<version>/hailo8/yolov10n.hef
 ```
 
-The `yolov11n.hef` shipped by the Model Zoo has the **NMS post-process layer baked
+The `yolov10n.hef` shipped by the Model Zoo has the **NMS post-process layer baked
 in**, which is what [web_detection.py](web_detection.py)'s `post_process_hailo()`
 expects. If you compile your own `.hef` without that layer, the output will be the
 3-branch raw tensor pair and you'll need to re-add DFL + box decoding.
@@ -74,7 +74,7 @@ wheel comes from the Hailo Developer Zone (registration required).
 Drop it into `hailort-packages/`:
 
 ```bash
-cd src/rpi5_hailo8_yolov11/hailort-packages
+cd src/rpi5_hailo8_yolov10/hailort-packages
 # Example
 ls hailort-4.23.0-cp311-cp311-linux_aarch64.whl
 ```
@@ -84,8 +84,8 @@ ls hailort-4.23.0-cp311-cp311-linux_aarch64.whl
 ## 3. Run via Docker (recommended)
 
 ```bash
-cd src/rpi5_hailo8_yolov11
-sudo docker build -f ../../docker/hailo8/yolov11.dockerfile -t rpi5-hailo8-yolov11:latest .
+cd src/rpi5_hailo8_yolov10
+sudo docker build -f ../../docker/hailo8/yolov10.dockerfile -t rpi5-hailo8-yolov10:latest .
 
 # IMPORTANT: bind-mount the host's libhailort.so.<X.Y.Z>. The wheel installed
 # inside the image only ships Python bindings; the native library must come
@@ -96,7 +96,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/hailo0:/dev/hailo0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-yolov11:latest
+    rpi5-hailo8-yolov10:latest
 ```
 
 The container starts the Web preview on `http://<Pi5_IP>:8000` with the bundled
@@ -111,8 +111,8 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-yolov11:latest \
-    python web_detection.py --model_path model/yolov11n.hef --camera_id 0
+    rpi5-hailo8-yolov10:latest \
+    python web_detection.py --model_path model/yolov10n.hef --camera_id 0
 ```
 
 ### Custom classes
@@ -125,8 +125,8 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-yolov11:latest \
-    python web_detection.py --model_path model/yolov11n.hef --video_path video/test.mp4 --class_path class_config.txt
+    rpi5-hailo8-yolov10:latest \
+    python web_detection.py --model_path model/yolov10n.hef --video_path video/test.mp4 --class_path class_config.txt
 ```
 
 `class_config.txt` is comma-separated, double-quoted names:
@@ -137,13 +137,13 @@ sudo docker run --rm --privileged --net=host \
 ## 4. Run without Docker
 
 ```bash
-cd src/rpi5_hailo8_yolov11
+cd src/rpi5_hailo8_yolov10
 pip install -r requirements.txt
 pip install hailort-packages/hailort-*.whl
 
-python web_detection.py --model_path model/yolov11n.hef --camera_id 0
+python web_detection.py --model_path model/yolov10n.hef --camera_id 0
 # or
-python web_detection.py --model_path model/yolov11n.hef --video_path video/test.mp4
+python web_detection.py --model_path model/yolov10n.hef --video_path video/test.mp4
 ```
 
 ---
@@ -152,15 +152,15 @@ python web_detection.py --model_path model/yolov11n.hef --video_path video/test.
 
 Highlights (full endpoint list in the project root [README.md](../../README.md)):
 
-- `POST /api/models/yolov11/predict` â€” single-shot inference on uploaded image, video
+- `POST /api/models/yolov10/predict` â€?single-shot inference on uploaded image, video
   frame, or current camera frame
-- `GET  /api/video_feed` â€” MJPEG stream with detection boxes overlaid
-- `GET  /POST /api/config` â€” read/update `obj_thresh` / `nms_thresh`
+- `GET  /api/video_feed` â€?MJPEG stream with detection boxes overlaid
+- `GET  /POST /api/config` â€?read/update `obj_thresh` / `nms_thresh`
 - `POST /api/video/upload`, `POST /api/video/analyze`, `GET /api/video/status`,
-  `GET /api/video/download/{filename}` â€” local video batch analysis
+  `GET /api/video/download/{filename}` â€?local video batch analysis
 
 `nms_thresh` is kept in the API for compatibility, but with the Model Zoo
-`yolov11n.hef` NMS is already done on-chip, so this slider acts only as an
+`yolov10n.hef` NMS is already done on-chip, so this slider acts only as an
 additional confidence-level filter knob. `obj_thresh` always filters detections
 client-side after the chip returns them.
 
@@ -189,7 +189,7 @@ Tuning hints:
 - Wired/local LAN? Set `--preview_width 0` to disable the resize and stream
   the native resolution.
 - The MJPEG endpoint pushes the latest frame on a condvar, so a slow client
-  never causes stale-frame pileup â€” the browser always sees something close
+  never causes stale-frame pileup â€?the browser always sees something close
   to "now."
 - While `/api/video/analyze` is running, the live preview automatically drops
   to 1 fps to free Hailo/CPU for the offline analysis (~2x speedup on 4K
@@ -197,11 +197,11 @@ Tuning hints:
 
 ---
 
-## 7. Adapting to other models (yolov8, yolov5, yolov11-seg, etc.)
+## 7. Adapting to other models (yolov8, yolov5, yolov10-seg, etc.)
 
 Use this directory as the template:
 
-1. Copy the whole `src/rpi5_hailo8_yolov11/` folder, rename to e.g.
+1. Copy the whole `src/rpi5_hailo8_yolov10/` folder, rename to e.g.
    `rpi5_hailo8_yolov5/`.
 2. Download the matching `.hef` from the Model Zoo and drop in `model/`.
 3. If the new model uses **the same output layout** (built-in NMS, `(1, num_classes,
@@ -218,10 +218,10 @@ Use this directory as the template:
 | Symptom | Likely cause |
 |---|---|
 | `Failed to open /dev/hailo0` inside container | Missing `--device /dev/hailo0:/dev/hailo0` |
-| `libhailort.so.<X.Y.Z>: cannot open shared object file` | Missing the `-v /usr/lib/libhailort.so.<X.Y.Z>:...:ro` bind-mount. The wheel only contains Python bindings â€” the `.so` must come from the host. |
+| `libhailort.so.<X.Y.Z>: cannot open shared object file` | Missing the `-v /usr/lib/libhailort.so.<X.Y.Z>:...:ro` bind-mount. The wheel only contains Python bindings â€?the `.so` must come from the host. |
 | `HailoRT firmware version mismatch` | Host driver and container wheel are different major.minor versions |
-| Detection coordinates are off | The `.hef` you're using has a different input size â€” set `IMG_SIZE` in `web_detection.py` to match `hef.get_input_vstream_infos()[0].shape[:2]` |
-| Single-digit FPS | You're probably rebuilding `InferVStreams` per frame â€” keep `HailoInfer` long-lived (default behavior of [py_utils/hailo_executor.py](py_utils/hailo_executor.py)) |
+| Detection coordinates are off | The `.hef` you're using has a different input size â€?set `IMG_SIZE` in `web_detection.py` to match `hef.get_input_vstream_infos()[0].shape[:2]` |
+| Single-digit FPS | You're probably rebuilding `InferVStreams` per frame â€?keep `HailoInfer` long-lived (default behavior of [py_utils/hailo_executor.py](py_utils/hailo_executor.py)) |
 | `output.dtype == object` branch never hits / always hits | HailoRT version differs from what was tested; both branches do the same thing, so detections still work |
 
 ---
@@ -231,7 +231,7 @@ Use this directory as the template:
 See [TEST_REPORT.md](TEST_REPORT.md) for the full validation log:
 
 - All endpoints exercised end-to-end on Pi 5 + Hailo-8 with a 4K source
-- Hailo inference: 8.5 ms/frame (yolov11n.hef)
+- Hailo inference: 8.5 ms/frame (yolov10n.hef)
 - LAN MJPEG: ~18 fps after V2 thread-split + 720p downscale (90Ã— over V1)
 - Offline analysis: 40 s for 394 frames of 4K (3Ã— over V1, ffmpeg libx264 ultrafast)
-- Pi 5 specific note: no `h264_v4l2m2m` HW encoder (Pi 4 only) â€” software encode required
+- Pi 5 specific note: no `h264_v4l2m2m` HW encoder (Pi 4 only) â€?software encode required

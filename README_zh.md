@@ -26,8 +26,26 @@ Model Zoo 的其它模型（yolov8s/m、yolov5、yolov8-seg 等）。
 
 ## 快速开始（一条命令，使用预构建镜像）
 
-发布的镜像已经包含源码、HailoRT wheel、ffmpeg 和三个 Model Zoo 权重
-（`yolov8n/s/m`）。宿主机只需要装好 Hailo 工具链即可。
+下面的快速开始示例使用已经发布的 YOLOv8 镜像，该镜像已经包含源码、
+HailoRT wheel、ffmpeg 和三个 Model Zoo 权重（`yolov8n/s/m`）。宿主机只需要
+装好 Hailo 工具链即可。
+
+已发布的 GHCR 镜像统一放在当前项目命名空间下：
+
+| 模型 | 镜像 |
+|---|---|
+| YOLOv8 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov8:latest` |
+| YOLOv5 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov5:latest` |
+| YOLOv10 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov10:latest` |
+| YOLOv11 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov11:latest` |
+| YOLOv8 Pose | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov8_pose:latest` |
+| SCRFD | `ghcr.io/seeed-projects/recomputer-r20-cv/scrfd:latest` |
+| SCDepthV3 | `ghcr.io/seeed-projects/recomputer-r20-cv/scdepthv3:latest` |
+| FastDepth | `ghcr.io/seeed-projects/recomputer-r20-cv/fast_depth:latest` |
+| Person Attribute ResNet | `ghcr.io/seeed-projects/recomputer-r20-cv/person_attr_resnet:latest` |
+| SegFormer B0 BN | `ghcr.io/seeed-projects/recomputer-r20-cv/segformer_b0_bn:latest` |
+| U-Net MobileNetV2 | `ghcr.io/seeed-projects/recomputer-r20-cv/unet_mobilenet_v2:latest` |
+| DeepLabV3 MobileNetV2 | `ghcr.io/seeed-projects/recomputer-r20-cv/deeplab_v3_mobilenet_v2:latest` |
 
 ### 1. 宿主机准备（首次，一次性）
 

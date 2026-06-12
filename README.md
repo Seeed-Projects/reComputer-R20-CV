@@ -28,9 +28,26 @@ yolov8-seg, etc.).
 
 ## Quick start (one-command, pre-built image)
 
-The published image already contains the source code, HailoRT wheel, ffmpeg, and
-the three Model Zoo `.hef` weights (`yolov8n/s/m`). You only need a working Hailo
-toolchain on the host.
+The quick-start example below uses the published YOLOv8 image, which already
+contains the source code, HailoRT wheel, ffmpeg, and the three Model Zoo `.hef`
+weights (`yolov8n/s/m`). You only need a working Hailo toolchain on the host.
+
+Published GHCR images are stored under this repository namespace:
+
+| Model | Image |
+|---|---|
+| YOLOv8 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov8:latest` |
+| YOLOv5 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov5:latest` |
+| YOLOv10 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov10:latest` |
+| YOLOv11 | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov11:latest` |
+| YOLOv8 Pose | `ghcr.io/seeed-projects/recomputer-r20-cv/yolov8_pose:latest` |
+| SCRFD | `ghcr.io/seeed-projects/recomputer-r20-cv/scrfd:latest` |
+| SCDepthV3 | `ghcr.io/seeed-projects/recomputer-r20-cv/scdepthv3:latest` |
+| FastDepth | `ghcr.io/seeed-projects/recomputer-r20-cv/fast_depth:latest` |
+| Person Attribute ResNet | `ghcr.io/seeed-projects/recomputer-r20-cv/person_attr_resnet:latest` |
+| SegFormer B0 BN | `ghcr.io/seeed-projects/recomputer-r20-cv/segformer_b0_bn:latest` |
+| U-Net MobileNetV2 | `ghcr.io/seeed-projects/recomputer-r20-cv/unet_mobilenet_v2:latest` |
+| DeepLabV3 MobileNetV2 | `ghcr.io/seeed-projects/recomputer-r20-cv/deeplab_v3_mobilenet_v2:latest` |
 
 ### 1. Host prep (one-time, on the Pi)
 

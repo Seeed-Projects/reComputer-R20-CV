@@ -1,6 +1,6 @@
-# unet v3 MobileNet v2 on Raspberry Pi 5 + Hailo-8
+# DeepLab v3 MobileNet v2 on Raspberry Pi 5 + Hailo-8
 
-This is the unet v3 MobileNet v2 **semantic segmentation** module for
+This is the DeepLab v3 MobileNet v2 **semantic segmentation** module for
 **Raspberry Pi 5 + Hailo-8** (reComputer R20 series). It started as a fork of
 the YOLOv5 template (the REST routes still carry the `/api/models/yolov5/...`
 path for backward compatibility) and has been retargeted to a 513Ã—513Ã—3
@@ -43,7 +43,7 @@ sudo systemctl start docker
 ```
 
 `hailortcli fw-control identify` should print board info and a firmware version.
-Remember the firmware version â€” your container's `hailort` wheel **must match it**.
+Remember the firmware version â€?your container's `hailort` wheel **must match it**.
 
 ---
 
@@ -51,14 +51,14 @@ Remember the firmware version â€” your container's `hailort` wheel **must match 
 
 ### 2.1 Download the model
 
-Grab a pre-compiled `unet_mobilenet_v2.hef` from the
+Grab a pre-compiled `deeplab_v3_mobilenet_v2.hef` from the
 [Hailo Model Zoo](https://github.com/hailo-ai/hailo_model_zoo) and drop it into
 `model/`:
 
 ```bash
-cd src/rpi5_hailo8_unet_mobilenet_v2/model
-# Example path â€” check the Model Zoo for the version matching your HailoRT
-wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/<version>/hailo8/unet_mobilenet_v2.hef
+cd src/rpi5_hailo8_deeplab_v3_mobilenet_v2/model
+# Example path â€?check the Model Zoo for the version matching your HailoRT
+wget https://hailo-model-zoo.s3.eu-west-2.amazonaws.com/ModelZoo/Compiled/<version>/hailo8/deeplab_v3_mobilenet_v2.hef
 ```
 
 The Model Zoo ships the model trained on **PASCAL VOC (21 classes,
@@ -77,7 +77,7 @@ wheel comes from the Hailo Developer Zone (registration required).
 Drop it into `hailort-packages/`:
 
 ```bash
-cd src/rpi5_hailo8_unet_mobilenet_v2/hailort-packages
+cd src/rpi5_hailo8_deeplab_v3_mobilenet_v2/hailort-packages
 # Example
 ls hailort-4.23.0-cp311-cp311-linux_aarch64.whl
 ```
@@ -87,8 +87,8 @@ ls hailort-4.23.0-cp311-cp311-linux_aarch64.whl
 ## 3. Run via Docker (recommended)
 
 ```bash
-cd src/rpi5_hailo8_unet_mobilenet_v2
-sudo docker build -f ../../docker/hailo8/unet_mobilenet_v2.dockerfile -t rpi5-hailo8-unet:latest .
+cd src/rpi5_hailo8_deeplab_v3_mobilenet_v2
+sudo docker build -f ../../docker/hailo8/deeplab_v3_mobilenet_v2.dockerfile -t rpi5-hailo8-deeplab:latest .
 
 # IMPORTANT: bind-mount the host's libhailort.so.<X.Y.Z>. The wheel installed
 # inside the image only ships Python bindings; the native library must come
@@ -99,7 +99,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/hailo0:/dev/hailo0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-unet:latest
+    rpi5-hailo8-deeplab:latest
 ```
 
 The container starts the Web preview on `http://<Pi5_IP>:8000` with the bundled
@@ -114,8 +114,8 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-unet:latest \
-    python web_detection.py --model_path model/unet_mobilenet_v2.hef --camera_id 0
+    rpi5-hailo8-deeplab:latest \
+    python web_detection.py --model_path model/deeplab_v3_mobilenet_v2.hef --camera_id 0
 ```
 
 ### Custom classes
@@ -128,11 +128,11 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    rpi5-hailo8-unet:latest \
-    python web_detection.py --model_path model/unet_mobilenet_v2.hef --video_path video/test.mp4 --class_path class_config.txt
+    rpi5-hailo8-deeplab:latest \
+    python web_detection.py --model_path model/deeplab_v3_mobilenet_v2.hef --video_path video/test.mp4 --class_path class_config.txt
 ```
 
-`class_config.txt` is comma-separated, double-quoted names â€” the **first** entry
+`class_config.txt` is comma-separated, double-quoted names â€?the **first** entry
 must be the background class (its mask region is left uncolored on the preview):
 
 ```
@@ -144,13 +144,13 @@ must be the background class (its mask region is left uncolored on the preview):
 ## 4. Run without Docker
 
 ```bash
-cd src/rpi5_hailo8_unet_mobilenet_v2
+cd src/rpi5_hailo8_deeplab_v3_mobilenet_v2
 pip install -r requirements.txt
 pip install hailort-packages/hailort-*.whl
 
-python web_detection.py --model_path model/unet_mobilenet_v2.hef --camera_id 0
+python web_detection.py --model_path model/deeplab_v3_mobilenet_v2.hef --camera_id 0
 # or
-python web_detection.py --model_path model/unet_mobilenet_v2.hef --video_path video/test.mp4
+python web_detection.py --model_path model/deeplab_v3_mobilenet_v2.hef --video_path video/test.mp4
 ```
 
 ---
@@ -159,20 +159,20 @@ python web_detection.py --model_path model/unet_mobilenet_v2.hef --video_path vi
 
 Highlights (full endpoint list in the project root [README.md](../../README.md)):
 
-- `POST /api/models/unet/predict` â€” single-shot inference on uploaded image, video
+- `POST /api/models/deeplab/predict` â€?single-shot inference on uploaded image, video
   frame, or current camera frame. **Path retained for backward compatibility**;
   the response `predictions` field is now a list of
-  `{class, confidence, pixels}` entries â€” one per non-background class found in
+  `{class, confidence, pixels}` entries â€?one per non-background class found in
   the segmentation mask. `confidence` is the fraction of mask pixels covered by
-  that class (0â€“1); `pixels` is the raw pixel count at network resolution
+  that class (0â€?); `pixels` is the raw pixel count at network resolution
   (513Ã—513).
-- `GET  /api/video_feed` â€” MJPEG stream with the segmentation mask alpha-blended
+- `GET  /api/video_feed` â€?MJPEG stream with the segmentation mask alpha-blended
   over the original frame.
-- `GET / POST /api/config` â€” read/update `obj_thresh` / `nms_thresh`. Both
+- `GET / POST /api/config` â€?read/update `obj_thresh` / `nms_thresh`. Both
   fields are kept in the API for backward compatibility but are not used by the
   segmentation pipeline.
 - `POST /api/video/upload`, `POST /api/video/analyze`, `GET /api/video/status`,
-  `GET /api/video/download/{filename}` â€” local video batch analysis.
+  `GET /api/video/download/{filename}` â€?local video batch analysis.
 
 ---
 
@@ -199,7 +199,7 @@ Tuning hints:
 - Wired/local LAN? Set `--preview_width 0` to disable the resize and stream
   the native resolution.
 - The MJPEG endpoint pushes the latest frame on a condvar, so a slow client
-  never causes stale-frame pileup â€” the browser always sees something close
+  never causes stale-frame pileup â€?the browser always sees something close
   to "now."
 - While `/api/video/analyze` is running, the live preview automatically drops
   to 1 fps to free Hailo/CPU for the offline analysis. It resumes full rate
@@ -211,13 +211,13 @@ Tuning hints:
 
 Use this directory as the template:
 
-1. Copy the whole `src/rpi5_hailo8_unet_mobilenet_v2/` folder and rename it.
+1. Copy the whole `src/rpi5_hailo8_deeplab_v3_mobilenet_v2/` folder and rename it.
 2. Download the matching `.hef` from the Model Zoo and drop in `model/`.
 3. If the new model uses the same `(1, H, W, num_classes)` per-pixel softmax
    output, only `IMG_SIZE` in `web_detection.py` and the default class list
    need adjusting.
 4. If channels come back as `(1, num_classes, H, W)`, `post_process_hailo()`
-   already detects this and transposes â€” no change needed.
+   already detects this and transposes â€?no change needed.
 5. For instance segmentation, panoptic, or models with a different output
    schema, rewrite `post_process_hailo()` to return a 2D class-index mask of
    shape `(input_h, input_w)`.
@@ -230,11 +230,11 @@ Use this directory as the template:
 | Symptom | Likely cause |
 |---|---|
 | `Failed to open /dev/hailo0` inside container | Missing `--device /dev/hailo0:/dev/hailo0` |
-| `libhailort.so.<X.Y.Z>: cannot open shared object file` | Missing the `-v /usr/lib/libhailort.so.<X.Y.Z>:...:ro` bind-mount. The wheel only contains Python bindings â€” the `.so` must come from the host. |
+| `libhailort.so.<X.Y.Z>: cannot open shared object file` | Missing the `-v /usr/lib/libhailort.so.<X.Y.Z>:...:ro` bind-mount. The wheel only contains Python bindings â€?the `.so` must come from the host. |
 | `HailoRT firmware version mismatch` | Host driver and container wheel are different major.minor versions |
-| Mask appears shifted/clipped on the preview | The `.hef` input size doesn't match `IMG_SIZE` â€” set it to `hef.get_input_vstream_infos()[0].shape[:2]` (default `(513, 513)`) |
+| Mask appears shifted/clipped on the preview | The `.hef` input size doesn't match `IMG_SIZE` â€?set it to `hef.get_input_vstream_infos()[0].shape[:2]` (default `(513, 513)`) |
 | Wrong colors / wrong class names on overlay | Your `.hef` was trained on a non-VOC dataset. Pass `--class_path class_config.txt` listing the actual classes in index order, with `background` first. |
-| Single-digit FPS | You're probably rebuilding `InferVStreams` per frame â€” keep `HailoInfer` long-lived (default behavior of [py_utils/hailo_executor.py](py_utils/hailo_executor.py)) |
+| Single-digit FPS | You're probably rebuilding `InferVStreams` per frame â€?keep `HailoInfer` long-lived (default behavior of [py_utils/hailo_executor.py](py_utils/hailo_executor.py)) |
 
 ---
 

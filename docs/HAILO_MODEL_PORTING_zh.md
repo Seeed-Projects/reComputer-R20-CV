@@ -148,7 +148,7 @@ http://<Pi5_IP>:8000
 本地验证通过后，镜像 tag 建议统一：
 
 ```bash
-ghcr.io/<owner>/r20-hailo8-<model>:latest
+ghcr.io/<owner>/<repository>/<model>:latest
 ```
 
 例如：
