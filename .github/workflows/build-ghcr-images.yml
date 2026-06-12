@@ -1,0 +1,147 @@
+name: Build Hailo8 Docker Images
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-ghcr-images.yml"
+      - "docker/hailo8/**"
+      - "src/rpi5_hailo8_*/**"
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model image to build"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - deeplab_v3_mobilenet_v2
+          - fast_depth
+          - person_attr_resnet
+          - scdepthv3
+          - scrfd
+          - segformer_b0_bn
+          - unet_mobilenet_v2
+          - yolov10
+          - yolov11
+          - yolov5
+          - yolov8
+          - yolov8_pose
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAMESPACE: seeed-projects/recomputer-r20-cv
+  SOURCE_REPOSITORY: https://github.com/Seeed-Projects/reComputer-R20-CV
+
+jobs:
+  build:
+    name: Build ${{ matrix.model }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - model: deeplab_v3_mobilenet_v2
+            image: deeplab_v3_mobilenet_v2
+            description: DeepLabV3 MobileNetV2 semantic segmentation
+          - model: fast_depth
+            image: fast_depth
+            description: FastDepth monocular depth estimation
+          - model: person_attr_resnet
+            image: person_attr_resnet
+            description: Person Attribute ResNet classifier
+          - model: scdepthv3
+            image: scdepthv3
+            description: SCDepthV3 monocular depth estimation
+          - model: scrfd
+            image: scrfd
+            description: SCRFD face detection
+          - model: segformer_b0_bn
+            image: segformer_b0_bn
+            description: SegFormer B0 BN semantic segmentation
+          - model: unet_mobilenet_v2
+            image: unet_mobilenet_v2
+            description: U-Net MobileNetV2 semantic segmentation
+          - model: yolov10
+            image: yolov10
+            description: YOLOv10 object detection
+          - model: yolov11
+            image: yolov11
+            description: YOLOv11 object detection
+          - model: yolov5
+            image: yolov5
+            description: YOLOv5 object detection
+          - model: yolov8
+            image: yolov8
+            description: YOLOv8 object detection
+          - model: yolov8_pose
+            image: yolov8_pose
+            description: YOLOv8 pose estimation
+
+    steps:
+      - name: Select model
+        id: selected
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" || "${{ github.event.inputs.model }}" == "all" || "${{ github.event.inputs.model }}" == "${{ matrix.model }}" ]]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.selected.outputs.build == 'true'
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        if: steps.selected.outputs.build == 'true'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set up Docker Buildx
+        if: steps.selected.outputs.build == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: steps.selected.outputs.build == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        if: steps.selected.outputs.build == 'true'
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=sha-
+          labels: |
+            org.opencontainers.image.title=${{ matrix.model }}
+            org.opencontainers.image.description=${{ matrix.description }} for Raspberry Pi 5 / CM5 + Hailo-8
+            org.opencontainers.image.source=${{ env.SOURCE_REPOSITORY }}
+            org.opencontainers.image.url=${{ env.SOURCE_REPOSITORY }}
+
+      - name: Build and push
+        if: steps.selected.outputs.build == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./src/rpi5_hailo8_${{ matrix.model }}
+          file: ./docker/hailo8/${{ matrix.model }}.dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.model }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.model }}
+          provenance: false

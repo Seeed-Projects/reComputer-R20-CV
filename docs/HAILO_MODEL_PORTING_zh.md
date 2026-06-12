@@ -154,5 +154,5 @@ ghcr.io/<owner>/r20-hailo8-<model>:latest
 例如：
 
 ```bash
-ghcr.io/seeed-projects/r20-hailo8-yolov8s:latest
+ghcr.io/seeed-projects/recomputer-r20-cv/yolov8:latest
 ```

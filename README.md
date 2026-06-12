@@ -68,7 +68,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/hailo0:/dev/hailo0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    ghcr.io/seeed-projects/r20-hailo8-yolov8:latest
+    ghcr.io/seeed-projects/recomputer-r20-cv/yolov8:latest
 ```
 
 Docker will pull the image on first run (~1.8 GB). The container then loops the
@@ -90,7 +90,7 @@ sudo docker run --rm --privileged --net=host \
     --device /dev/video0:/dev/video0 \
     -v /usr/lib/libhailort.so.4.23.0:/usr/lib/libhailort.so.4.23.0:ro \
     -v /usr/lib/libhailort.so:/usr/lib/libhailort.so:ro \
-    ghcr.io/seeed-projects/r20-hailo8-yolov8:latest \
+    ghcr.io/seeed-projects/recomputer-r20-cv/yolov8:latest \
     python web_detection.py --model_path model/yolov8n.hef --camera_id 0
 ```
 
